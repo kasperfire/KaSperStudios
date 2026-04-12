@@ -36,7 +36,7 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.4rem 3rem;display:flex;align-items:center;justify-content:space-between}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.8rem 3.5rem;display:flex;align-items:center;justify-content:space-between}
 nav::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:.5s;z-index:-1}
 nav.scrolled::before{background:rgba(0,0,0,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
 .logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;letter-spacing:.06em;text-decoration:none;color:var(--text)}
@@ -56,10 +56,10 @@ nav.scrolled::before{background:rgba(0,0,0,.88);backdrop-filter:blur(18px);borde
 .hero-logo-label{font-family:'Playfair Display',serif;font-size:clamp(.9rem,1.8vw,1.4rem);letter-spacing:.35em;color:var(--muted);margin-bottom:2.5rem;text-transform:uppercase}
 .hero-logo-label span{color:var(--gold)}
 .h-eyebrow{font-size:.68rem;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;will-change:transform,opacity}
-.h-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,8vw,7rem);line-height:1.05;margin-bottom:2rem}
+.h-title{font-family:'Playfair Display',serif;font-size:clamp(3.2rem,10vw,8.5rem);line-height:1.02;margin-bottom:2rem;font-weight:700}
 .h-title .line{display:block;overflow:hidden}
 .h-title .word{display:inline-block;will-change:transform,opacity}
-.gold-word{background:linear-gradient(120deg,var(--gold-d),var(--gold-l),#fffbe6,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gold-word{background:linear-gradient(120deg,var(--gold-d) 0%,var(--gold-l) 35%,#fffbe6 52%,var(--gold-l) 65%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .h-sub{color:var(--muted);max-width:480px;margin:0 auto 3.5rem;line-height:1.8;font-size:clamp(.9rem,1.6vw,1.05rem);opacity:0;font-weight:300;will-change:transform,opacity}
 .h-btns{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;opacity:0;will-change:opacity}
 .btn-g{padding:.9rem 2.5rem;border-radius:3rem;font-weight:600;font-family:inherit;font-size:.92rem;text-decoration:none;transition:.35s;display:inline-flex;align-items:center;gap:.5rem;cursor:none}
@@ -83,10 +83,10 @@ section{padding:8rem 2rem;position:relative}
 #portfolio{background:var(--dark)}
 .p-header{margin-bottom:5rem}
 .p-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem}
-.p-card{background:var(--card);border:1px solid var(--border);border-radius:1.2rem;overflow:hidden;transition:border-color .35s;will-change:transform,opacity}
-.p-card:hover{border-color:rgba(201,168,76,.42)}
+.p-card{background:var(--card);border:1px solid var(--border);border-radius:1.2rem;overflow:hidden;transition:border-color .35s,transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s;will-change:transform,opacity}
+.p-card:hover{border-color:rgba(201,168,76,.55);transform:translateY(-8px) scale(1.02);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(201,168,76,.1),0 0 0 1px rgba(201,168,76,.12)}
 .p-thumb-wrap{position:relative;overflow:hidden;height:230px}
-.p-thumb{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.p-thumb{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
 .p-card:hover .p-thumb{transform:scale(1.06)}
 .p-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent 55%);display:flex;align-items:flex-end;padding:1.5rem;opacity:0;transition:.35s}
 .p-card:hover .p-overlay{opacity:1}
@@ -167,12 +167,15 @@ body.eng .ar-i{display:none}body.eng .en-i{display:inline}
 
 /* MOBILE */
 @media(max-width:768px){
-  nav{padding:1rem 1.4rem}
+  nav{padding:1.2rem 1.6rem}
   body{cursor:auto}
   #cur,#cur-dot{display:none}
   .p-grid,.sv-grid{grid-template-columns:1fr}
   .h-btns{flex-direction:column;align-items:center}
   .t-card{width:280px}
+  .p-thumb-wrap{height:auto;aspect-ratio:4/3}
+  .p-thumb{aspect-ratio:4/3;object-fit:cover;object-position:center;height:100%}
+  .p-card:hover{transform:none;box-shadow:none}
 }
 </style>
 </head>
