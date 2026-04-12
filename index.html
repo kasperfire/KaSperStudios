@@ -3,164 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KaSperStudios — مواقع مطاعم احترافية</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>KaSperStudios</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&family=Inter:wght@200;300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#c9a84c;--gold-l:#e8c97a;--black:#080808;--dark:#0f0f0f;
-  --card:#141414;--border:rgba(201,168,76,0.18);--text:#f0ece4;--muted:rgba(240,236,228,0.5);
+  --gold:#c9a84c;--gold-l:#e8c97a;--gold-d:#a07820;
+  --black:#000;--dark:#0a0a0a;--card:#0e0e0e;
+  --border:rgba(201,168,76,.18);--text:#f0ece4;--muted:rgba(240,236,228,.45);
 }
 html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--text);font-family:'Cairo','Inter',sans-serif;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;opacity:.35;pointer-events:none;z-index:9000;
+body{background:var(--black);color:var(--text);font-family:'Cairo','Inter',sans-serif;overflow-x:hidden;cursor:none}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;opacity:.28;pointer-events:none;z-index:8000;
 background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E")}
-.gold{background:linear-gradient(135deg,var(--gold),var(--gold-l),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* CURSOR */
+#cur,#cur-dot{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:36px;height:36px;border:1px solid rgba(201,168,76,.45);transition:width .28s,height .28s,background .28s,border-color .28s,opacity .28s}
+#cur.hov{width:54px;height:54px;background:rgba(201,168,76,.09);border-color:var(--gold)}
+#cur-dot{width:5px;height:5px;background:var(--gold)}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:#000;z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2rem}
+.s-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);width:0;transition:width 1s ease}
+.s-line.grow{width:min(340px,70vw)}
+#sp-text{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,3.2vw,1.9rem);letter-spacing:.18em;text-align:center;padding:0 2rem;background:linear-gradient(120deg,var(--gold-d),var(--gold-l),#fffbe6,var(--gold-l),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;min-height:2.4rem}
+#sp-caret{display:inline-block;width:2px;height:1em;background:var(--gold);vertical-align:middle;margin-right:2px;animation:blink .6s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.1rem 3rem;display:flex;align-items:center;justify-content:space-between;transition:.3s}
-nav.scrolled{background:rgba(8,8,8,.96);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
-.logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;letter-spacing:.04em;user-select:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.4rem 3rem;display:flex;align-items:center;justify-content:space-between}
+nav::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:.5s;z-index:-1}
+nav.scrolled::before{background:rgba(0,0,0,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;letter-spacing:.06em;text-decoration:none;color:var(--text)}
 .logo em{color:var(--gold);font-style:normal}
 .nav-r{display:flex;align-items:center;gap:1rem}
-.lang-btn{background:transparent;border:1px solid var(--border);color:var(--gold);padding:.38rem .95rem;border-radius:2rem;cursor:pointer;font-size:.82rem;font-family:inherit;letter-spacing:.08em;transition:.25s}
+.lang-btn{background:transparent;border:1px solid var(--border);color:var(--gold);padding:.36rem .9rem;border-radius:2rem;cursor:none;font-size:.78rem;font-family:inherit;letter-spacing:.1em;transition:.25s}
 .lang-btn:hover{background:var(--gold);color:var(--black)}
-.nav-cta{background:var(--gold);color:var(--black);border:none;padding:.5rem 1.4rem;border-radius:2rem;cursor:pointer;font-family:inherit;font-weight:700;font-size:.88rem;text-decoration:none;transition:.25s}
-.nav-cta:hover{background:var(--gold-l);transform:translateY(-1px)}
+.nav-cta{position:relative;overflow:hidden;background:transparent;color:var(--text);border:1px solid var(--border);padding:.46rem 1.3rem;border-radius:2rem;font-family:inherit;font-weight:600;font-size:.84rem;text-decoration:none;transition:color .3s,border-color .3s;cursor:none}
+.nav-cta::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:-1}
+.nav-cta:hover{color:var(--black);border-color:var(--gold)}
+.nav-cta:hover::before{transform:scaleX(1)}
 
 /* HERO */
-#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 5rem;position:relative;overflow:hidden}
-.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(201,168,76,.07),transparent)}
-.hero-line{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:1px;height:100px;background:linear-gradient(to bottom,var(--gold),transparent)}
-#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-#hero .hero-glow,#hero .hero-line,#hero .h-label,#hero .h-title,#hero .h-sub,#hero .h-btns{position:relative;z-index:1}
-.h-label{font-size:.72rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;margin-bottom:1.8rem;opacity:0;animation:fadeUp .7s .15s forwards}
-.h-title{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,6.5vw,5.5rem);line-height:1.1;margin-bottom:1.5rem;opacity:0;animation:fadeUp .7s .3s forwards}
-.h-sub{color:var(--muted);max-width:520px;line-height:1.75;margin-bottom:3rem;font-size:clamp(.95rem,1.8vw,1.1rem);opacity:0;animation:fadeUp .7s .45s forwards}
-.h-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp .7s .6s forwards}
-.btn-p{background:var(--gold);color:var(--black);padding:.85rem 2.2rem;border-radius:3rem;font-weight:700;font-family:inherit;font-size:.95rem;text-decoration:none;transition:.3s;display:inline-flex;align-items:center;gap:.5rem}
-.btn-p:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:0 10px 30px rgba(201,168,76,.25)}
-.btn-o{background:transparent;color:var(--text);padding:.85rem 2.2rem;border-radius:3rem;border:1px solid var(--border);font-family:inherit;font-size:.95rem;text-decoration:none;transition:.3s}
-.btn-o:hover{border-color:var(--gold);color:var(--gold)}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem;position:relative;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-inner{position:relative;z-index:2;width:100%}
+.hero-logo-label{font-family:'Playfair Display',serif;font-size:clamp(.9rem,1.8vw,1.4rem);letter-spacing:.35em;color:var(--muted);margin-bottom:2.5rem;text-transform:uppercase}
+.hero-logo-label span{color:var(--gold)}
+.h-eyebrow{font-size:.68rem;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;will-change:transform,opacity}
+.h-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,8vw,7rem);line-height:1.05;margin-bottom:2rem}
+.h-title .line{display:block;overflow:hidden}
+.h-title .word{display:inline-block;will-change:transform,opacity}
+.gold-word{background:linear-gradient(120deg,var(--gold-d),var(--gold-l),#fffbe6,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h-sub{color:var(--muted);max-width:480px;margin:0 auto 3.5rem;line-height:1.8;font-size:clamp(.9rem,1.6vw,1.05rem);opacity:0;font-weight:300;will-change:transform,opacity}
+.h-btns{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;opacity:0;will-change:opacity}
+.btn-g{padding:.9rem 2.5rem;border-radius:3rem;font-weight:600;font-family:inherit;font-size:.92rem;text-decoration:none;transition:.35s;display:inline-flex;align-items:center;gap:.5rem;cursor:none}
+.btn-g.solid{background:var(--gold);color:var(--black)}
+.btn-g.solid:hover{background:var(--gold-l);box-shadow:0 0 40px rgba(201,168,76,.35);transform:translateY(-2px)}
+.btn-g.outline{border:1px solid var(--border);color:var(--text)}
+.btn-g.outline:hover{border-color:var(--gold);color:var(--gold);box-shadow:0 0 28px rgba(201,168,76,.12)}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--muted);font-size:.66rem;letter-spacing:.25em;opacity:0}
+.scroll-wheel{width:22px;height:34px;border:1px solid rgba(201,168,76,.3);border-radius:11px;display:flex;justify-content:center;padding-top:5px}
+.scroll-dot{width:3px;height:6px;background:var(--gold);border-radius:2px;animation:sdot 1.8s ease infinite}
+@keyframes sdot{0%{transform:translateY(0);opacity:1}100%{transform:translateY(9px);opacity:0}}
 
 /* SECTIONS */
-section{padding:6rem 2rem}
+section{padding:8rem 2rem;position:relative}
 .c{max-width:1180px;margin:0 auto}
-.s-label{font-size:.7rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;margin-bottom:.9rem;display:block}
-.s-title{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,3.8vw,2.9rem);line-height:1.2;margin-bottom:1rem}
-.s-desc{color:var(--muted);max-width:480px;line-height:1.75;margin-bottom:3.5rem;font-size:.95rem}
+.s-label{font-size:.66rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;display:block}
+.s-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.4rem);line-height:1.15;margin-bottom:1.2rem}
+.s-desc{color:var(--muted);line-height:1.8;font-size:.95rem;font-weight:300}
 
 /* PORTFOLIO */
 #portfolio{background:var(--dark)}
-.p-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:1.8rem}
-.p-card{background:var(--card);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:.4s}
-.p-card:hover{transform:translateY(-7px);border-color:rgba(201,168,76,.5);box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 1px rgba(201,168,76,.08)}
-.p-thumb-wrap{position:relative;overflow:hidden;height:220px;background:linear-gradient(135deg,#111,#1a1400)}
-.p-thumb{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .5s}
-.p-card:hover .p-thumb{transform:scale(1.04)}
-.p-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:.3s;backdrop-filter:blur(2px)}
+.p-header{margin-bottom:5rem}
+.p-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem}
+.p-card{background:var(--card);border:1px solid var(--border);border-radius:1.2rem;overflow:hidden;transition:border-color .35s;will-change:transform,opacity}
+.p-card:hover{border-color:rgba(201,168,76,.42)}
+.p-thumb-wrap{position:relative;overflow:hidden;height:230px}
+.p-thumb{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.p-card:hover .p-thumb{transform:scale(1.06)}
+.p-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent 55%);display:flex;align-items:flex-end;padding:1.5rem;opacity:0;transition:.35s}
 .p-card:hover .p-overlay{opacity:1}
-.visit{background:var(--gold);color:var(--black);padding:.6rem 1.5rem;border-radius:2rem;font-weight:700;font-size:.88rem;text-decoration:none;font-family:inherit}
-.p-info{padding:1.4rem 1.5rem}
-.p-tag{font-size:.68rem;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:.45rem;display:block}
-.p-name{font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:.5rem}
-.p-desc{font-size:.88rem;color:var(--muted);line-height:1.65}
+.visit{background:var(--gold);color:var(--black);padding:.55rem 1.4rem;border-radius:2rem;font-weight:700;font-size:.84rem;text-decoration:none;font-family:inherit;cursor:none;white-space:nowrap}
+.p-info{padding:1.5rem}
+.p-tag{font-size:.65rem;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem;display:block}
+.p-name{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:.55rem}
+.p-desc{font-size:.85rem;color:var(--muted);line-height:1.68}
 
 /* SERVICES */
-.sv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem}
-.sv-card{background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:1.9rem;transition:.3s}
-.sv-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-4px)}
-.sv-icon{font-size:1.8rem;margin-bottom:1rem;line-height:1}
-.sv-name{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:.5rem}
-.sv-desc{font-size:.87rem;color:var(--muted);line-height:1.65}
+#services{background:var(--black)}
+.sv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.3rem;margin-top:4rem}
+.sv-card{border:1px solid var(--border);border-radius:1.1rem;padding:2rem;transition:.35s;position:relative;overflow:hidden;background:var(--card);will-change:transform,opacity}
+.sv-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,rgba(201,168,76,.04),transparent 60%);pointer-events:none}
+.sv-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.sv-icon{font-size:1.6rem;margin-bottom:1.1rem}
+.sv-name{font-family:'Playfair Display',serif;font-size:1.08rem;margin-bottom:.55rem}
+.sv-desc{font-size:.84rem;color:var(--muted);line-height:1.7}
 
 /* STATS */
-#stats{background:var(--dark)}
-.st-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2rem;text-align:center}
-.st-num{font-family:'Playfair Display',serif;font-size:3.4rem;background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.st-lbl{color:var(--muted);font-size:.88rem;margin-top:.5rem}
+#stats{background:var(--dark);text-align:center}
+.st-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:3rem}
+.st-num{font-family:'Playfair Display',serif;font-size:4rem;background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.st-divider{width:30px;height:1px;background:var(--border);margin:.9rem auto 0}
+.st-lbl{color:var(--muted);font-size:.84rem;margin-top:.6rem;letter-spacing:.04em}
 
 /* TESTIMONIALS */
-#testimonials{background:var(--black)}
-.t-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.6rem}
-.t-card{background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem;position:relative;transition:.3s}
-.t-card:hover{border-color:rgba(201,168,76,.35);transform:translateY(-4px)}
-.t-quote-icon{font-family:'Playfair Display',serif;font-size:4.5rem;line-height:.8;color:var(--gold);opacity:.25;position:absolute;top:1.2rem;}
-[dir="rtl"] .t-quote-icon{right:1.5rem}
-[dir="ltr"] .t-quote-icon{left:1.5rem}
-.t-text{font-size:.92rem;line-height:1.75;color:var(--text);margin-bottom:1.5rem;position:relative;z-index:1;padding-top:.8rem}
-.t-footer{display:flex;align-items:center;gap:.9rem}
-.t-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8a6000);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--black);flex-shrink:0}
-.t-name{font-weight:700;font-size:.92rem;margin-bottom:.1rem}
-.t-role{font-size:.78rem;color:var(--gold)}
-.t-stars{color:var(--gold);font-size:.85rem;margin-bottom:.5rem;letter-spacing:.1em}
+#testimonials{background:var(--black);overflow:hidden}
+.t-overflow{overflow:hidden;margin-top:4rem;padding-bottom:.5rem}
+.t-track{display:flex;gap:1.6rem;width:max-content;will-change:transform}
+.t-card{background:var(--card);border:1px solid var(--border);border-radius:1.1rem;padding:2.2rem;width:320px;flex-shrink:0;position:relative;transition:border-color .3s}
+.t-card:hover{border-color:rgba(201,168,76,.35)}
+.t-q{font-family:'Playfair Display',serif;font-size:3.5rem;line-height:.7;color:var(--gold);opacity:.2;position:absolute;top:1.4rem}
+[dir=rtl] .t-q{right:1.4rem}[dir=ltr] .t-q{left:1.4rem}
+.t-stars{color:var(--gold);font-size:.8rem;margin-bottom:1rem;letter-spacing:.1em}
+.t-text{font-size:.86rem;line-height:1.78;color:var(--text);margin-bottom:1.6rem;padding-top:.5rem}
+.t-foot{display:flex;align-items:center;gap:.85rem}
+.t-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#5a3a00);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;color:var(--black);flex-shrink:0;font-size:1rem}
+.t-name{font-weight:700;font-size:.88rem}
+.t-role{font-size:.74rem;color:var(--gold);margin-top:.1rem}
+
+/* PRICING */
+#pricing{background:var(--dark)}
+.pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:740px;margin:4rem auto 0}
+.pr-card{background:var(--card);border:1px solid var(--border);border-radius:1.3rem;padding:2.6rem;text-align:center;position:relative;overflow:hidden;transition:transform .4s,box-shadow .4s;will-change:transform,opacity}
+.pr-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -10%,rgba(201,168,76,.06),transparent 55%);pointer-events:none}
+.pr-card.feat{border-color:rgba(201,168,76,.38)}
+.pr-card:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.pr-badge{position:absolute;top:0;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold-d),var(--gold-l));color:var(--black);font-size:.65rem;font-weight:800;letter-spacing:.15em;padding:.3rem 1.2rem;border-radius:0 0 .9rem .9rem;white-space:nowrap}
+.pr-ico{font-size:2rem;margin-bottom:1rem;margin-top:.4rem}
+.pr-name{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:.5rem}
+.pr-desc{font-size:.83rem;color:var(--muted);line-height:1.65;margin-bottom:1.8rem}
+.pr-amt{font-family:'Playfair Display',serif;font-size:3.5rem;background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.pr-cur{font-size:.88rem;color:var(--gold);vertical-align:super}
+.pr-per{font-size:.78rem;color:var(--muted);margin:.4rem 0 1.8rem}
+.pr-feats{list-style:none;margin-bottom:2rem;text-align:start}
+.pr-feats li{font-size:.84rem;color:var(--muted);padding:.42rem 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:.55rem}
+.pr-feats li .ck{color:var(--gold);font-size:.8rem;flex-shrink:0}
+.pr-btn{display:block;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.78rem 1.5rem;border-radius:2rem;font-weight:700;font-family:inherit;font-size:.9rem;text-decoration:none;transition:color .3s;position:relative;overflow:hidden;cursor:none;z-index:0}
+.pr-btn::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:-1}
+.pr-btn:hover{color:var(--black)}
+.pr-btn:hover::before{transform:scaleX(1)}
 
 /* CTA */
-#cta{text-align:center;background:linear-gradient(135deg,rgba(201,168,76,.05),transparent);border-top:1px solid var(--border)}
-#cta .s-desc{margin:0 auto 2.2rem}
-.wa-btn{display:inline-flex;align-items:center;gap:.7rem;background:#25D366;color:#fff;padding:.95rem 2.4rem;border-radius:3rem;font-weight:700;font-size:1rem;text-decoration:none;font-family:inherit;transition:.3s;margin-top:.5rem}
-.wa-btn:hover{background:#1ebe5d;transform:translateY(-2px);box-shadow:0 8px 30px rgba(37,211,102,.3)}
+#cta{background:var(--black);text-align:center;border-top:1px solid var(--border)}
+.wa-btn{display:inline-flex;align-items:center;gap:.7rem;background:#25D366;color:#fff;padding:1rem 2.6rem;border-radius:3rem;font-weight:700;font-size:1rem;text-decoration:none;font-family:inherit;transition:.35s;margin-top:2rem;cursor:none}
+.wa-btn:hover{background:#1db954;transform:translateY(-3px);box-shadow:0 10px 40px rgba(37,211,102,.32)}
 
 /* FOOTER */
-footer{border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--muted);font-size:.83rem}
-.f-logo{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:.4rem}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.8rem}
+.f-logo{font-family:'Playfair Display',serif;font-size:1.15rem;margin-bottom:.5rem;color:var(--text)}
 .f-logo em{color:var(--gold);font-style:normal}
 
-/* REVEAL */
-.rev{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
-.rev.vis{opacity:1;transform:none}
-.t-grid .rev:nth-child(2){transition-delay:.12s}
-.t-grid .rev:nth-child(3){transition-delay:.24s}
-.p-grid .rev:nth-child(2){transition-delay:.1s}
-.p-grid .rev:nth-child(3){transition-delay:.2s}
-.sv-grid .rev:nth-child(2){transition-delay:.08s}
-.sv-grid .rev:nth-child(3){transition-delay:.16s}
-.sv-grid .rev:nth-child(4){transition-delay:.24s}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-
-/* BILINGUAL */
-.ar{display:block}.en{display:none}
-.ar-i{display:inline}.en-i{display:none}
+/* LANG */
+.ar{display:block}.en{display:none}.ar-i{display:inline}.en-i{display:none}
 body.eng .ar{display:none}body.eng .en{display:block}
 body.eng .ar-i{display:none}body.eng .en-i{display:inline}
 
+/* MOBILE */
 @media(max-width:768px){
-  nav{padding:1rem 1.5rem}
+  nav{padding:1rem 1.4rem}
+  body{cursor:auto}
+  #cur,#cur-dot{display:none}
+  .p-grid,.sv-grid{grid-template-columns:1fr}
   .h-btns{flex-direction:column;align-items:center}
-  .p-grid,.t-grid,.pr-grid{grid-template-columns:1fr}
+  .t-card{width:280px}
 }
-
-/* CURSOR GLOW */
-#cursor-glow{pointer-events:none;position:fixed;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.11) 0%,rgba(201,168,76,.03) 40%,transparent 70%);transform:translate(-50%,-50%);z-index:9001;opacity:0;transition:opacity .5s;will-change:left,top}
-body:hover #cursor-glow{opacity:1}
-
-/* PRICING */
-#pricing{background:var(--black)}
-.pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.8rem;max-width:720px;margin:0 auto}
-.pr-card{background:var(--card);border:1px solid var(--border);border-radius:1.2rem;padding:2.4rem;text-align:center;position:relative;transition:.4s;overflow:hidden}
-.pr-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.05),transparent 60%);pointer-events:none}
-.pr-card.featured{border-color:rgba(201,168,76,.45);box-shadow:0 0 50px rgba(201,168,76,.06)}
-.pr-card:hover{transform:translateY(-7px);border-color:rgba(201,168,76,.55);box-shadow:0 24px 60px rgba(0,0,0,.5)}
-.pr-badge{position:absolute;top:0;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--gold-l));color:var(--black);font-size:.68rem;font-weight:700;letter-spacing:.18em;padding:.32rem 1.2rem;border-radius:0 0 1rem 1rem}
-.pr-icon{font-size:2.2rem;margin-bottom:1rem;margin-top:.5rem}
-.pr-name{font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:.5rem}
-.pr-desc{font-size:.85rem;color:var(--muted);line-height:1.65;margin-bottom:1.8rem}
-.pr-amount{font-family:'Playfair Display',serif;font-size:3.2rem;background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;display:inline}
-.pr-currency{font-size:1rem;color:var(--gold);vertical-align:super;font-size:.95rem}
-.pr-period{font-size:.8rem;color:var(--muted);margin-top:.4rem;margin-bottom:1.8rem}
-.pr-features{list-style:none;margin-bottom:2rem;text-align:start}
-.pr-features li{font-size:.87rem;color:var(--muted);padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:.6rem}
-.pr-features li span.chk{color:var(--gold);font-weight:700;font-size:.85rem;flex-shrink:0}
-.pr-cta{display:block;text-align:center;background:var(--gold);color:var(--black);padding:.78rem 1.5rem;border-radius:2rem;font-weight:700;font-family:inherit;font-size:.92rem;text-decoration:none;transition:.3s}
-.pr-cta:hover{background:var(--gold-l);transform:translateY(-1px);box-shadow:0 6px 22px rgba(201,168,76,.28)}
 </style>
 </head>
 <body id="body-root">
-<div id="cursor-glow"></div>
 
+<!-- CUSTOM CURSOR -->
+<div id="cur"></div>
+<div id="cur-dot"></div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="s-line" id="sl-top"></div>
+  <span id="sp-text"><span id="sp-caret"></span></span>
+  <div class="s-line" id="sl-bot"></div>
+</div>
+
+<!-- NAV -->
 <nav id="nav">
-  <div class="logo">KaSper<em>Studios</em></div>
+  <a href="#" class="logo">KaSper<em>Studios</em></a>
   <div class="nav-r">
     <button class="lang-btn" onclick="toggleLang()"><span class="ar-i">EN</span><span class="en-i">عربي</span></button>
     <a href="#cta" class="nav-cta"><span class="ar-i">تواصل معنا</span><span class="en-i">Contact Us</span></a>
@@ -170,45 +201,60 @@ body:hover #cursor-glow{opacity:1}
 <!-- HERO -->
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
-  <div class="hero-glow"></div>
-  <div class="hero-line"></div>
-  <p class="h-label"><span class="ar-i">تصميم مواقع المطاعم</span><span class="en-i">Restaurant Web Design</span></p>
-  <h1 class="h-title">
-    <div class="ar">نحوّل مطعمك إلى<br><span class="gold">تجربة رقمية استثنائية</span></div>
-    <div class="en">We turn your restaurant into<br><span class="gold">an extraordinary digital experience</span></div>
-  </h1>
-  <p class="h-sub">
-    <span class="ar-i">مواقع مطاعم فاخرة ومميزة — تعكس هويتك، تجذب عملاءك، وتميّزك عن الجميع.</span>
-    <span class="en-i">Premium, distinctive restaurant websites — reflecting your identity, attracting customers, and setting you apart.</span>
-  </p>
-  <div class="h-btns">
-    <a href="#portfolio" class="btn-p"><span class="ar-i">شاهد أعمالنا</span><span class="en-i">View Our Work</span> ↓</a>
-    <a href="#cta" class="btn-o"><span class="ar-i">ابدأ مشروعك</span><span class="en-i">Start Your Project</span></a>
+  <div class="hero-inner" id="hero-inner">
+    <div class="hero-logo-label" id="hero-logo">KaSper<span>Studios</span></div>
+    <p class="h-eyebrow" id="h-ey">
+      <span class="ar-i">تصميم مواقع المطاعم</span>
+      <span class="en-i">Restaurant Web Design</span>
+    </p>
+    <h1 class="h-title" id="h-title">
+      <div class="ar">
+        <span class="line"><span class="word">نحوّل مطعمك</span></span>
+        <span class="line"><span class="word">إلى تجربة</span></span>
+        <span class="line"><span class="word gold-word">رقمية استثنائية</span></span>
+      </div>
+      <div class="en">
+        <span class="line"><span class="word">We turn your</span></span>
+        <span class="line"><span class="word">restaurant into</span></span>
+        <span class="line"><span class="word gold-word">an extraordinary experience</span></span>
+      </div>
+    </h1>
+    <p class="h-sub" id="h-sub">
+      <span class="ar-i">مواقع مطاعم فاخرة تعكس هويتك وتجذب عملاءك — مصممة بدقة جراحية.</span>
+      <span class="en-i">Luxury restaurant websites that reflect your identity and attract customers — crafted with surgical precision.</span>
+    </p>
+    <div class="h-btns" id="h-btns">
+      <a href="#portfolio" class="btn-g solid"><span class="ar-i">شاهد أعمالنا</span><span class="en-i">View Our Work</span></a>
+      <a href="#cta" class="btn-g outline"><span class="ar-i">ابدأ مشروعك</span><span class="en-i">Start Your Project</span></a>
+    </div>
+  </div>
+  <div class="scroll-hint" id="scroll-hint">
+    <div class="scroll-wheel"><div class="scroll-dot"></div></div>
+    <span><span class="ar-i">مرّر للأسفل</span><span class="en-i">Scroll</span></span>
   </div>
 </section>
 
 <!-- PORTFOLIO -->
 <section id="portfolio">
   <div class="c">
-    <span class="s-label rev"><span class="ar-i">أعمالنا</span><span class="en-i">Our Work</span></span>
-    <h2 class="s-title rev"><div class="ar">مشاريع مختارة</div><div class="en">Selected Projects</div></h2>
-    <p class="s-desc rev">
-      <span class="ar-i">كل موقع قصة مختلفة — نصممها بعناية لتعكس روح كل مطعم وتجذب جمهوره.</span>
-      <span class="en-i">Every site tells a different story — crafted to capture each restaurant's soul and engage its audience.</span>
-    </p>
+    <div class="p-header">
+      <span class="s-label"><span class="ar-i">أعمالنا</span><span class="en-i">Our Work</span></span>
+      <h2 class="s-title"><div class="ar">مشاريع مختارة</div><div class="en">Selected Projects</div></h2>
+      <p class="s-desc" style="max-width:420px"><span class="ar-i">كل موقع قصة مختلفة — مصممة لتعكس روح المطعم وتجذب جمهوره.</span><span class="en-i">Every site tells a different story — designed to capture the restaurant's soul.</span></p>
+    </div>
     <div class="p-grid">
-      <div class="p-card rev">
+      <div class="p-card">
         <div class="p-thumb-wrap">
           <img class="p-thumb" src="https://image.thum.io/get/width/800/crop/460/noanimate/https://modern-luna-nest.lovable.app/" alt="Luna Café" loading="lazy">
           <div class="p-overlay"><a href="https://modern-luna-nest.lovable.app/" target="_blank" class="visit"><span class="ar-i">زيارة الموقع</span><span class="en-i">Visit Site</span> ↗</a></div>
         </div>
         <div class="p-info">
-          <span class="p-tag"><span class="ar-i">كافيه — متخصص بالقهوة</span><span class="en-i">Café — Specialty Coffee</span></span>
+          <span class="p-tag"><span class="ar-i">كافيه — قهوة متخصصة</span><span class="en-i">Café — Specialty Coffee</span></span>
           <h3 class="p-name">لونا كافيه — Luna Café</h3>
-          <p class="p-desc"><span class="ar-i">موقع أنيق لكافيه متخصص بالقهوة، يجمع بين الأجواء الدافئة والتصميم العصري الراقي.</span><span class="en-i">An elegant site for a specialty coffee café — warm ambiance meets modern, refined design.</span></p>
+          <p class="p-desc"><span class="ar-i">أجواء دافئة وتصميم عصري راقٍ لكافيه متخصص بالقهوة.</span><span class="en-i">Warm ambiance meets refined modern design for a specialty coffee café.</span></p>
         </div>
       </div>
-      <div class="p-card rev">
+      <div class="p-card">
         <div class="p-thumb-wrap">
           <img class="p-thumb" src="https://image.thum.io/get/width/800/crop/460/noanimate/https://cosmic-dine-arabic.lovable.app/" alt="Nebula Dining" loading="lazy">
           <div class="p-overlay"><a href="https://cosmic-dine-arabic.lovable.app/" target="_blank" class="visit"><span class="ar-i">زيارة الموقع</span><span class="en-i">Visit Site</span> ↗</a></div>
@@ -216,18 +262,18 @@ body:hover #cursor-glow{opacity:1}
         <div class="p-info">
           <span class="p-tag"><span class="ar-i">مطعم فاخر — الرياض</span><span class="en-i">Fine Dining — Riyadh</span></span>
           <h3 class="p-name">سديم — Nebula Dining</h3>
-          <p class="p-desc"><span class="ar-i">تجربة طعام كونية في الرياض — موقع مستوحى من الفضاء بتصميم داكن وغامر وجذّاب.</span><span class="en-i">A cosmic dining experience in Riyadh — space-inspired dark design, immersive and breathtaking.</span></p>
+          <p class="p-desc"><span class="ar-i">تجربة طعام كونية — موقع مستوحى من الفضاء، داكن وغامر.</span><span class="en-i">Cosmic dining — space-inspired dark immersive design in Riyadh.</span></p>
         </div>
       </div>
-      <div class="p-card rev">
+      <div class="p-card">
         <div class="p-thumb-wrap">
-          <img class="p-thumb" src="https://image.thum.io/get/width/800/crop/460/noanimate/https://graffiti-future-burger.lovable.app/" alt="GRAFFITI Burger" loading="lazy">
+          <img class="p-thumb" src="https://image.thum.io/get/width/800/crop/460/noanimate/https://graffiti-future-burger.lovable.app/" alt="GRAFFITI" loading="lazy">
           <div class="p-overlay"><a href="https://graffiti-future-burger.lovable.app/" target="_blank" class="visit"><span class="ar-i">زيارة الموقع</span><span class="en-i">Visit Site</span> ↗</a></div>
         </div>
         <div class="p-info">
-          <span class="p-tag"><span class="ar-i">برجر — حضري وعصري</span><span class="en-i">Burger — Urban & Bold</span></span>
+          <span class="p-tag"><span class="ar-i">برجر — حضري وجريء</span><span class="en-i">Burger — Urban & Bold</span></span>
           <h3 class="p-name">GRAFFITI — جرافيتي</h3>
-          <p class="p-desc"><span class="ar-i">برجر المستقبل — موقع جريء وحضري يعكس شخصية العلامة التجارية المميزة والمختلفة.</span><span class="en-i">Future Burger — bold and urban, capturing the brand's raw, distinctive personality.</span></p>
+          <p class="p-desc"><span class="ar-i">برجر المستقبل — موقع جريء يعكس شخصية العلامة المميزة.</span><span class="en-i">Future Burger — bold urban design capturing raw brand personality.</span></p>
         </div>
       </div>
     </div>
@@ -237,17 +283,13 @@ body:hover #cursor-glow{opacity:1}
 <!-- SERVICES -->
 <section id="services">
   <div class="c">
-    <span class="s-label rev"><span class="ar-i">خدماتنا</span><span class="en-i">Services</span></span>
-    <h2 class="s-title rev"><div class="ar">ماذا نقدم لك؟</div><div class="en">What We Offer</div></h2>
-    <p class="s-desc rev">
-      <span class="ar-i">نبني تجارب رقمية متكاملة، مصممة خصيصاً لعالم المطاعم والمقاهي.</span>
-      <span class="en-i">We build complete digital experiences, crafted specifically for the restaurant and café world.</span>
-    </p>
+    <span class="s-label"><span class="ar-i">خدماتنا</span><span class="en-i">Services</span></span>
+    <h2 class="s-title"><div class="ar">ماذا نقدم لك؟</div><div class="en">What We Offer</div></h2>
     <div class="sv-grid">
-      <div class="sv-card rev"><div class="sv-icon">✦</div><h3 class="sv-name"><div class="ar">تصميم مخصص بالكامل</div><div class="en">Fully Custom Design</div></h3><p class="sv-desc"><span class="ar-i">تصميم فريد يعكس هوية مطعمك ويميّزك عن كل المنافسين.</span><span class="en-i">A unique design that reflects your brand and sets you apart from every competitor.</span></p></div>
-      <div class="sv-card rev"><div class="sv-icon">◈</div><h3 class="sv-name"><div class="ar">ثنائي اللغة RTL</div><div class="en">Bilingual RTL</div></h3><p class="sv-desc"><span class="ar-i">دعم كامل للعربية مع RTL وتبديل سلس بين العربية والإنجليزية.</span><span class="en-i">Full Arabic RTL support with seamless switching between Arabic and English.</span></p></div>
-      <div class="sv-card rev"><div class="sv-icon">⬡</div><h3 class="sv-name"><div class="ar">طلب عبر واتساب</div><div class="en">WhatsApp Orders</div></h3><p class="sv-desc"><span class="ar-i">نظام طلب ذكي عبر واتساب يسهّل التواصل مع عملائك مباشرة.</span><span class="en-i">Smart WhatsApp ordering that connects you directly with your customers.</span></p></div>
-      <div class="sv-card rev"><div class="sv-icon">◎</div><h3 class="sv-name"><div class="ar">متوافق مع الجوال</div><div class="en">Mobile First</div></h3><p class="sv-desc"><span class="ar-i">مواقع مُحسّنة للهاتف أولاً — حيث يتصفح معظم عملائك.</span><span class="en-i">Sites optimized for mobile first — where most of your customers browse.</span></p></div>
+      <div class="sv-card"><div class="sv-icon">✦</div><h3 class="sv-name"><div class="ar">تصميم مخصص</div><div class="en">Custom Design</div></h3><p class="sv-desc"><span class="ar-i">تصميم فريد يعكس هوية مطعمك بالكامل.</span><span class="en-i">A unique design fully reflecting your restaurant's identity.</span></p></div>
+      <div class="sv-card"><div class="sv-icon">◈</div><h3 class="sv-name"><div class="ar">ثنائي اللغة RTL</div><div class="en">Bilingual RTL</div></h3><p class="sv-desc"><span class="ar-i">دعم كامل للعربية مع تبديل سلس بين اللغتين.</span><span class="en-i">Full Arabic RTL support with seamless language switching.</span></p></div>
+      <div class="sv-card"><div class="sv-icon">⬡</div><h3 class="sv-name"><div class="ar">طلب واتساب</div><div class="en">WhatsApp Orders</div></h3><p class="sv-desc"><span class="ar-i">نظام طلب ذكي يربطك بعملائك مباشرة.</span><span class="en-i">Smart ordering system connecting you directly to customers.</span></p></div>
+      <div class="sv-card"><div class="sv-icon">◎</div><h3 class="sv-name"><div class="ar">جوال أولاً</div><div class="en">Mobile First</div></h3><p class="sv-desc"><span class="ar-i">مواقع محسّنة للهاتف حيث يتصفح عملاؤك.</span><span class="en-i">Sites optimized for mobile where your customers browse.</span></p></div>
     </div>
   </div>
 </section>
@@ -256,22 +298,10 @@ body:hover #cursor-glow{opacity:1}
 <section id="stats">
   <div class="c">
     <div class="st-grid">
-      <div class="rev">
-        <div class="st-num" data-target="8" data-suffix="+">0</div>
-        <div class="st-lbl"><span class="ar-i">مشاريع مكتملة</span><span class="en-i">Projects Delivered</span></div>
-      </div>
-      <div class="rev">
-        <div class="st-num" data-target="100" data-suffix="%">0</div>
-        <div class="st-lbl"><span class="ar-i">رضا العملاء</span><span class="en-i">Client Satisfaction</span></div>
-      </div>
-      <div class="rev">
-        <div class="st-num" data-target="3" data-suffix="">0</div>
-        <div class="st-lbl"><span class="ar-i">أيام متوسط التسليم</span><span class="en-i">Avg. Days to Deliver</span></div>
-      </div>
-      <div class="rev">
-        <div class="st-num" data-target="2" data-suffix="">0</div>
-        <div class="st-lbl"><span class="ar-i">لغتان مدعومتان</span><span class="en-i">Languages Supported</span></div>
-      </div>
+      <div><div class="st-num" data-target="8" data-suffix="+">0</div><div class="st-divider"></div><div class="st-lbl"><span class="ar-i">مشاريع مكتملة</span><span class="en-i">Projects Delivered</span></div></div>
+      <div><div class="st-num" data-target="100" data-suffix="%">0</div><div class="st-divider"></div><div class="st-lbl"><span class="ar-i">رضا العملاء</span><span class="en-i">Client Satisfaction</span></div></div>
+      <div><div class="st-num" data-target="5" data-suffix="">0</div><div class="st-divider"></div><div class="st-lbl"><span class="ar-i">أيام متوسط التسليم</span><span class="en-i">Avg. Days to Deliver</span></div></div>
+      <div><div class="st-num" data-target="2" data-suffix="">0</div><div class="st-divider"></div><div class="st-lbl"><span class="ar-i">لغتان مدعومتان</span><span class="en-i">Languages Supported</span></div></div>
     </div>
   </div>
 </section>
@@ -279,68 +309,15 @@ body:hover #cursor-glow{opacity:1}
 <!-- TESTIMONIALS -->
 <section id="testimonials">
   <div class="c">
-    <span class="s-label rev" style="display:block;text-align:center"><span class="ar-i">آراء العملاء</span><span class="en-i">Client Reviews</span></span>
-    <h2 class="s-title rev" style="text-align:center;margin-bottom:.8rem">
-      <div class="ar">ماذا قالوا عنّا؟</div>
-      <div class="en">What Our Clients Say</div>
-    </h2>
-    <p class="s-desc rev" style="margin:0 auto 3rem;text-align:center">
-      <span class="ar-i">ثقة عملاؤنا هي أكبر جائزة نحصل عليها.</span>
-      <span class="en-i">The trust of our clients is the greatest reward we receive.</span>
-    </p>
-    <div class="t-grid">
-
-      <!-- Testimonial 1 -->
-      <div class="t-card rev">
-        <div class="t-quote-icon">"</div>
-        <div class="t-stars">★★★★★</div>
-        <p class="t-text">
-          <span class="ar-i">تعاملت مع كاسبر ستوديو لتصميم موقع مطعمنا وكانت التجربة استثنائية. التصميم فاخر وعصري، وزاد عدد الحجوزات لدينا بشكل ملحوظ بعد إطلاق الموقع. أنصح بهم بشدة.</span>
-          <span class="en-i">Working with KaSperStudios for our restaurant website was an exceptional experience. The design is luxurious and modern, and our reservations increased noticeably after launch. Highly recommended.</span>
-        </p>
-        <div class="t-footer">
-          <div class="t-avatar">ف</div>
-          <div>
-            <div class="t-name"><span class="ar-i">فيصل العتيبي</span><span class="en-i">Faisal Al-Otaibi</span></div>
-            <div class="t-role"><span class="ar-i">صاحب مطعم سدير — الرياض</span><span class="en-i">Owner, Sudair Restaurant — Riyadh</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Testimonial 2 -->
-      <div class="t-card rev">
-        <div class="t-quote-icon">"</div>
-        <div class="t-stars">★★★★★</div>
-        <p class="t-text">
-          <span class="ar-i">الموقع الذي صمموه لنا تجاوز كل توقعاتي. الألوان، الخطوط، طريقة عرض المنيو — كل شيء يعكس هوية كافيهنا بدقة. الزبائن دائماً يسألوننا عن الموقع ويثنون عليه.</span>
-          <span class="en-i">The website they designed for us exceeded all my expectations. The colors, fonts, menu presentation — everything perfectly reflects our café identity. Customers constantly compliment the site.</span>
-        </p>
-        <div class="t-footer">
-          <div class="t-avatar">ن</div>
-          <div>
-            <div class="t-name"><span class="ar-i">نورة الشمري</span><span class="en-i">Noura Al-Shammari</span></div>
-            <div class="t-role"><span class="ar-i">مديرة كافيه بلوم — جدة</span><span class="en-i">Manager, Bloom Café — Jeddah</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Testimonial 3 -->
-      <div class="t-card rev">
-        <div class="t-quote-icon">"</div>
-        <div class="t-stars">★★★★★</div>
-        <p class="t-text">
-          <span class="ar-i">سرعة التسليم كانت مذهلة وجودة العمل أفضل من أي وكالة تعاملت معها. نظام الطلب عبر واتساب وفّر علينا الكثير من الوقت والجهد. شغل احترافي بكل معنى الكلمة.</span>
-          <span class="en-i">The delivery speed was remarkable and the quality surpassed any agency I've worked with. The WhatsApp ordering system saved us a huge amount of time and effort. Truly professional work.</span>
-        </p>
-        <div class="t-footer">
-          <div class="t-avatar">م</div>
-          <div>
-            <div class="t-name"><span class="ar-i">محمد القحطاني</span><span class="en-i">Mohammed Al-Qahtani</span></div>
-            <div class="t-role"><span class="ar-i">مؤسس سلسلة برجر ذا كلاسيك — الدمام</span><span class="en-i">Founder, The Classic Burger — Dammam</span></div>
-          </div>
-        </div>
-      </div>
-
+    <span class="s-label"><span class="ar-i">آراء العملاء</span><span class="en-i">Client Reviews</span></span>
+    <h2 class="s-title"><div class="ar">ماذا قالوا عنّا؟</div><div class="en">What Our Clients Say</div></h2>
+  </div>
+  <div class="t-overflow">
+    <div class="t-track" id="t-track">
+      <div class="t-card"><div class="t-q">"</div><div class="t-stars">★★★★★</div><p class="t-text"><span class="ar-i">تجربة استثنائية — التصميم فاخر وعصري وزاد عدد حجوزاتنا بشكل ملحوظ بعد الإطلاق.</span><span class="en-i">An exceptional experience — luxurious modern design and our bookings increased noticeably after launch.</span></p><div class="t-foot"><div class="t-av">ف</div><div><div class="t-name"><span class="ar-i">فيصل العتيبي</span><span class="en-i">Faisal Al-Otaibi</span></div><div class="t-role"><span class="ar-i">صاحب مطعم سدير — الرياض</span><span class="en-i">Owner, Sudair Restaurant — Riyadh</span></div></div></div></div>
+      <div class="t-card"><div class="t-q">"</div><div class="t-stars">★★★★★</div><p class="t-text"><span class="ar-i">الموقع تجاوز كل توقعاتي. الزبائن يثنون عليه دائماً. شغل فني رائع حقاً.</span><span class="en-i">The site exceeded all my expectations. Customers constantly compliment it. Truly artistic work.</span></p><div class="t-foot"><div class="t-av">ن</div><div><div class="t-name"><span class="ar-i">نورة الشمري</span><span class="en-i">Noura Al-Shammari</span></div><div class="t-role"><span class="ar-i">مديرة كافيه بلوم — جدة</span><span class="en-i">Manager, Bloom Café — Jeddah</span></div></div></div></div>
+      <div class="t-card"><div class="t-q">"</div><div class="t-stars">★★★★★</div><p class="t-text"><span class="ar-i">سرعة تسليم مذهلة وجودة تفوق الوكالات الكبيرة. نظام واتساب وفّر علينا الكثير.</span><span class="en-i">Incredible delivery speed and quality surpassing big agencies. The WhatsApp system saved us so much.</span></p><div class="t-foot"><div class="t-av">م</div><div><div class="t-name"><span class="ar-i">محمد القحطاني</span><span class="en-i">Mohammed Al-Qahtani</span></div><div class="t-role"><span class="ar-i">مؤسس ذا كلاسيك — الدمام</span><span class="en-i">Founder, The Classic — Dammam</span></div></div></div></div>
+      <div class="t-card"><div class="t-q">"</div><div class="t-stars">★★★★★</div><p class="t-text"><span class="ar-i">من أفضل القرارات لمطعمنا. الموقع يعكس هويتنا بدقة ويجذب شريحة عملاء جديدة.</span><span class="en-i">One of the best decisions for our restaurant. The site reflects our identity and attracts new customers.</span></p><div class="t-foot"><div class="t-av">س</div><div><div class="t-name"><span class="ar-i">سارة المنصور</span><span class="en-i">Sara Al-Mansour</span></div><div class="t-role"><span class="ar-i">صاحبة مطعم لافييل — الخبر</span><span class="en-i">Owner, La Fille — Khobar</span></div></div></div></div>
     </div>
   </div>
 </section>
@@ -348,249 +325,228 @@ body:hover #cursor-glow{opacity:1}
 <!-- PRICING -->
 <section id="pricing">
   <div class="c">
-    <span class="s-label rev" style="display:block;text-align:center"><span class="ar-i">الأسعار</span><span class="en-i">Pricing</span></span>
-    <h2 class="s-title rev" style="text-align:center;margin-bottom:.8rem">
-      <div class="ar">شفافية تامة في الأسعار</div>
-      <div class="en">Clear & Honest Pricing</div>
-    </h2>
-    <p class="s-desc rev" style="margin:0 auto 3rem;text-align:center">
-      <span class="ar-i">لا رسوم مخفية، لا مفاجآت — فقط قيمة حقيقية مقابل كل ريال.</span>
-      <span class="en-i">No hidden fees, no surprises — just real value for every riyal.</span>
-    </p>
+    <span class="s-label" style="display:block;text-align:center"><span class="ar-i">الأسعار</span><span class="en-i">Pricing</span></span>
+    <h2 class="s-title" style="text-align:center"><div class="ar">شفافية تامة</div><div class="en">Clear & Honest</div></h2>
     <div class="pr-grid">
-
-      <!-- Website Package -->
-      <div class="pr-card featured rev">
+      <div class="pr-card feat">
         <div class="pr-badge"><span class="ar-i">الأكثر طلباً</span><span class="en-i">Most Popular</span></div>
-        <div class="pr-icon">✦</div>
+        <div class="pr-ico">✦</div>
         <h3 class="pr-name"><div class="ar">الموقع الكامل</div><div class="en">Full Website</div></h3>
-        <p class="pr-desc">
-          <span class="ar-i">موقع مطعمك المثالي — جاهز للإطلاق في أيام.</span>
-          <span class="en-i">Your perfect restaurant website — ready to launch in days.</span>
-        </p>
-        <div>
-          <span class="pr-currency">SAR</span>
-          <span class="pr-amount">1,500</span>
-        </div>
-        <div class="pr-period"><span class="ar-i">دفعة واحدة</span><span class="en-i">One-time payment</span></div>
-        <ul class="pr-features">
-          <li><span class="chk">✓</span><span class="ar-i">تصميم مخصص بالكامل</span><span class="en-i">Fully custom design</span></li>
-          <li><span class="chk">✓</span><span class="ar-i">ثنائي اللغة عربي / إنجليزي</span><span class="en-i">Bilingual Arabic / English</span></li>
-          <li><span class="chk">✓</span><span class="ar-i">متوافق مع الجوال 100%</span><span class="en-i">100% mobile responsive</span></li>
-          <li><span class="chk">✓</span><span class="ar-i">نظام طلب عبر واتساب</span><span class="en-i">WhatsApp ordering system</span></li>
-          <li><span class="chk">✓</span><span class="ar-i">تسليم خلال 5 أيام</span><span class="en-i">Delivered within 5 days</span></li>
+        <p class="pr-desc"><span class="ar-i">موقع مطعمك — جاهز في أيام.</span><span class="en-i">Your restaurant site — ready in days.</span></p>
+        <div><span class="pr-cur">SAR</span><span class="pr-amt">1,500</span></div>
+        <div class="pr-per"><span class="ar-i">دفعة واحدة</span><span class="en-i">One-time payment</span></div>
+        <ul class="pr-feats">
+          <li><span class="ck">✓</span><span class="ar-i">تصميم مخصص بالكامل</span><span class="en-i">Fully custom design</span></li>
+          <li><span class="ck">✓</span><span class="ar-i">ثنائي اللغة عربي / إنجليزي</span><span class="en-i">Bilingual Arabic / English</span></li>
+          <li><span class="ck">✓</span><span class="ar-i">متوافق مع الجوال 100%</span><span class="en-i">100% mobile responsive</span></li>
+          <li><span class="ck">✓</span><span class="ar-i">نظام طلب واتساب</span><span class="en-i">WhatsApp ordering system</span></li>
+          <li><span class="ck">✓</span><span class="ar-i">تسليم خلال 5 أيام</span><span class="en-i">Delivered within 5 days</span></li>
         </ul>
-        <a href="https://wa.me/966562080917" target="_blank" class="pr-cta">
-          <span class="ar-i">ابدأ الآن</span><span class="en-i">Get Started</span>
-        </a>
+        <a href="https://wa.me/966562080917" target="_blank" class="pr-btn"><span class="ar-i">ابدأ الآن</span><span class="en-i">Get Started</span></a>
       </div>
-
-      <!-- Maintenance Package -->
-      <div class="pr-card rev">
-        <div class="pr-icon">◈</div>
+      <div class="pr-card">
+        <div class="pr-ico">◈</div>
         <h3 class="pr-name"><div class="ar">الصيانة الشهرية</div><div class="en">Monthly Maintenance</div></h3>
-        <p class="pr-desc">
-          <span class="ar-i">موقعك دائماً محدّث وحيّ — بدون أي متاعب.</span>
-          <span class="en-i">Keep your site fresh and alive — completely hassle-free.</span>
-        </p>
-        <div>
-          <span class="pr-currency">SAR</span>
-          <span class="pr-amount">200</span>
-        </div>
-        <div class="pr-period"><span class="ar-i">شهرياً</span><span class="en-i">per month</span></div>
-        <ul class="pr-features">
-          <li><span class="chk">✓</span><span class="ar-i">إضافة أطباق جديدة للمنيو</span><span class="en-i">Add new menu items</span></li>
-          <li><span class="chk">✓</span><span class="ar-i">تحديث الأسعار والعروض</span><span class="en-i">Update prices & offers</span></li>
-          <li><span class="chk">✓</span><span class="ar-i">تعديلات على المحتوى</span><span class="en-i">Content edits & updates</span></li>
-          <li><span class="chk">✓</span><span class="ar-i">دعم فني على مدار الأسبوع</span><span class="en-i">Weekly technical support</span></li>
-          <li><span class="chk">✓</span><span class="ar-i">تقرير شهري بالأداء</span><span class="en-i">Monthly performance report</span></li>
+        <p class="pr-desc"><span class="ar-i">موقعك دائماً حيّ ومحدّث.</span><span class="en-i">Your site always fresh and alive.</span></p>
+        <div><span class="pr-cur">SAR</span><span class="pr-amt">200</span></div>
+        <div class="pr-per"><span class="ar-i">شهرياً</span><span class="en-i">per month</span></div>
+        <ul class="pr-feats">
+          <li><span class="ck">✓</span><span class="ar-i">إضافة أطباق للمنيو</span><span class="en-i">Add new menu items</span></li>
+          <li><span class="ck">✓</span><span class="ar-i">تحديث الأسعار والعروض</span><span class="en-i">Update prices & offers</span></li>
+          <li><span class="ck">✓</span><span class="ar-i">تعديلات على المحتوى</span><span class="en-i">Content edits & updates</span></li>
+          <li><span class="ck">✓</span><span class="ar-i">دعم فني أسبوعي</span><span class="en-i">Weekly technical support</span></li>
+          <li><span class="ck">✓</span><span class="ar-i">تقرير شهري بالأداء</span><span class="en-i">Monthly performance report</span></li>
         </ul>
-        <a href="https://wa.me/966562080917" target="_blank" class="pr-cta">
-          <span class="ar-i">اشترك الآن</span><span class="en-i">Subscribe Now</span>
-        </a>
+        <a href="https://wa.me/966562080917" target="_blank" class="pr-btn"><span class="ar-i">اشترك الآن</span><span class="en-i">Subscribe Now</span></a>
       </div>
-
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section id="cta">
+<section id="cta" style="padding:8rem 2rem;text-align:center;border-top:1px solid var(--border)">
   <div class="c">
-    <span class="s-label rev" style="display:block;text-align:center"><span class="ar-i">هل أنت مستعد؟</span><span class="en-i">Ready to start?</span></span>
-    <h2 class="s-title rev" style="text-align:center;margin-bottom:.9rem">
-      <div class="ar">ابدأ مشروعك معنا اليوم</div>
-      <div class="en">Start Your Project Today</div>
-    </h2>
-    <p class="s-desc rev" style="margin:0 auto 0;text-align:center">
-      <span class="ar-i">تواصل معنا عبر واتساب وسنبني لك موقع مطعمك الأحلام — مخصص، فاخر، واحترافي.</span>
-      <span class="en-i">Reach out on WhatsApp and we'll craft your dream restaurant website — custom, premium, professional.</span>
+    <span class="s-label" style="display:block;text-align:center"><span class="ar-i">تواصل معنا</span><span class="en-i">Get In Touch</span></span>
+    <h2 class="s-title" style="text-align:center"><div class="ar">ابدأ مشروعك اليوم</div><div class="en">Start Your Project Today</div></h2>
+    <p class="s-desc" style="text-align:center;max-width:400px;margin:0 auto">
+      <span class="ar-i">تواصل عبر واتساب وسنبني لك موقع مطعمك — مخصص، فاخر، واحترافي.</span>
+      <span class="en-i">Reach us on WhatsApp and we'll build your restaurant site — custom, premium, professional.</span>
     </p>
-    <div class="rev" style="text-align:center">
-      <a href="https://wa.me/966562080917" target="_blank" class="wa-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        <span class="ar-i">تواصل عبر واتساب</span><span class="en-i">Chat on WhatsApp</span>
-      </a>
-    </div>
+    <a href="https://wa.me/966562080917" target="_blank" class="wa-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span class="ar-i">تواصل عبر واتساب</span><span class="en-i">Chat on WhatsApp</span>
+    </a>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="f-logo">KaSper<em>Studios</em></div>
   <p><span class="ar-i">© 2025 KaSperStudios — جميع الحقوق محفوظة</span><span class="en-i">© 2025 KaSperStudios — All rights reserved</span></p>
 </footer>
 
 <script>
-// Lang toggle
-const body=document.getElementById('body-root'),html=document.getElementById('html-root');
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── LANG ── */
+const htmlEl=document.getElementById('html-root'),bodyEl=document.getElementById('body-root');
 function toggleLang(){
-  body.classList.toggle('eng');
-  const e=body.classList.contains('eng');
-  html.setAttribute('lang',e?'en':'ar');
-  html.setAttribute('dir',e?'ltr':'rtl');
+  bodyEl.classList.toggle('eng');
+  const e=bodyEl.classList.contains('eng');
+  htmlEl.setAttribute('lang',e?'en':'ar');
+  htmlEl.setAttribute('dir',e?'ltr':'rtl');
 }
 
-// Scroll reveal
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}});
-},{threshold:.12});
-document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+/* ── CURSOR ── */
+const cur=document.getElementById('cur'),dot=document.getElementById('cur-dot');
+let mx=-200,my=-200,cx=-200,cy=-200;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
+(function lc(){cx+=(mx-cx)*.12;cy+=(my-cy)*.12;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(lc)})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('hov'));
+});
 
-// Navbar
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
-
-// Animated counters
-function animateCounter(el){
-  const target=+el.dataset.target;
-  const suffix=el.dataset.suffix||'';
-  const dur=1600;
-  const start=performance.now();
-  const easeOut=t=>1-Math.pow(1-t,3);
-  function tick(now){
-    const p=Math.min((now-start)/dur,1);
-    el.textContent=Math.round(easeOut(p)*target)+suffix;
-    if(p<1)requestAnimationFrame(tick);
+/* ── SPLASH TYPEWRITER ── */
+const splash=document.getElementById('splash');
+const spText=document.getElementById('sp-text');
+const spCaret=document.getElementById('sp-caret');
+const msg='You Entered KaSper Mind';
+let i=0;
+document.body.style.overflow='hidden';
+setTimeout(()=>{
+  document.getElementById('sl-top').classList.add('grow');
+  document.getElementById('sl-bot').classList.add('grow');
+},100);
+function type(){
+  if(i<msg.length){
+    spText.insertBefore(document.createTextNode(msg[i]),spCaret);
+    i++;
+    setTimeout(type,i===1?350:50+Math.random()*40);
+  } else {
+    spCaret.style.display='none';
+    setTimeout(()=>{
+      gsap.to(splash,{opacity:0,duration:1,ease:'power2.inOut',onComplete:()=>{
+        splash.remove();
+        document.body.style.overflow='';
+        initSite();
+      }});
+    },800);
   }
-  requestAnimationFrame(tick);
 }
+setTimeout(type,500);
 
-const counterObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      animateCounter(e.target);
-      counterObs.unobserve(e.target);
-    }
-  });
-},{threshold:.5});
-document.querySelectorAll('[data-target]').forEach(el=>counterObs.observe(el));
+/* ── INIT AFTER SPLASH ── */
+function initSite(){
 
-// Cursor glow
-const glow=document.getElementById('cursor-glow');
-let mx=0,my=0,cx=0,cy=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-(function loop(){
-  cx+=(mx-cx)*.1;cy+=(my-cy)*.1;
-  glow.style.left=cx+'px';glow.style.top=cy+'px';
-  requestAnimationFrame(loop);
-})();
+  /* Navbar scroll */
+  ScrollTrigger.create({start:'top -80',onUpdate:s=>document.getElementById('nav').classList.toggle('scrolled',s.progress>0)});
 
-// Hero ember particle animation
-(function(){
+  /* ── HERO CANVAS (ember particles) ── */
   const cv=document.getElementById('hero-canvas');
   const ctx=cv.getContext('2d');
-  let W,H,parts=[];
-
-  function resize(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;}
-
-  function Particle(fromBottom){
+  let W,H;
+  const pts=[];
+  function resize(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight}
+  function P(init){
     this.reset=function(fb){
       this.x=Math.random()*W;
-      this.y=fb?H+Math.random()*30:Math.random()*H;
-      this.r=Math.random()*1.7+0.3;
-      this.vy=-(Math.random()*.38+.1);
-      this.vx=(Math.random()-.5)*.12;
-      this.life=fb?0:Math.floor(Math.random()*320);
-      this.maxLife=Math.random()*320+200;
-      this.phase=Math.random()*Math.PI*2;
-      this.bright=Math.random()>.78;
-      this.baseAlpha=this.bright?Math.random()*.45+.35:Math.random()*.18+.04;
+      this.y=fb?H+8:Math.random()*H;
+      this.r=Math.random()*1.6+.3;
+      this.vy=-(Math.random()*.34+.08);
+      this.vx=(Math.random()-.5)*.1;
+      this.life=fb?0:~~(Math.random()*280);
+      this.max=Math.random()*280+160;
+      this.ph=Math.random()*Math.PI*2;
+      this.bright=Math.random()>.8;
+      this.ba=this.bright?Math.random()*.4+.28:Math.random()*.14+.04;
     };
-    this.reset(fromBottom);
-    this.update=function(){
-      this.y+=this.vy;
-      this.x+=this.vx+Math.sin(this.life*.019+this.phase)*.28;
-      this.life++;
-      if(this.y<-8)this.reset(true);
+    this.reset(!init);
+    this.tick=function(){
+      this.y+=this.vy;this.x+=this.vx+Math.sin(this.life*.02+this.ph)*.22;
+      this.life++;if(this.y<-6)this.reset(false);
     };
     this.draw=function(){
-      const t=this.life/this.maxLife;
-      const fade=t<.15?t/.15:t>.72?(1-t)/.28:1;
-      const a=this.baseAlpha*fade;
+      const t=this.life/this.max,f=t<.15?t/.15:t>.72?(1-t)/.28:1,a=this.ba*f;
       if(a<.005)return;
       ctx.save();
-      if(this.bright){ctx.shadowBlur=12;ctx.shadowColor=`rgba(201,168,76,${a*.65})`;}
-      ctx.beginPath();
-      ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-      ctx.fillStyle=this.bright?`rgba(218,182,88,${a})`:`rgba(245,225,160,${a})`;
-      ctx.fill();
-      ctx.restore();
+      if(this.bright){ctx.shadowBlur=10;ctx.shadowColor=`rgba(201,168,76,${a*.55})`}
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=this.bright?`rgba(218,182,88,${a})`:`rgba(245,218,148,${a})`;
+      ctx.fill();ctx.restore();
     };
   }
-
-  // Shooting streaks
-  const streaks=[];
-  function Streak(){
-    this.reset=function(){
-      this.x=Math.random()*W*.8+W*.1;
-      this.y=Math.random()*H*.5;
-      this.len=Math.random()*60+30;
-      this.alpha=0;
-      this.life=0;
-      this.maxLife=Math.random()*80+60;
-      this.angle=-Math.PI/6+Math.random()*.2;
-      this.speed=Math.random()*2+1.5;
-    };
-    this.reset();
-    this.life=Math.random()*this.maxLife; // stagger starts
-    this.update=function(){
-      this.x+=Math.cos(this.angle)*this.speed;
-      this.y+=Math.sin(this.angle)*this.speed;
-      this.life++;
-      const t=this.life/this.maxLife;
-      this.alpha=t<.25?t/.25:t>.6?(1-t)/.4:1;
-      if(this.life>this.maxLife)this.reset();
-    };
-    this.draw=function(){
-      const a=this.alpha*.18;
-      if(a<.005)return;
-      const ex=this.x-Math.cos(this.angle)*this.len;
-      const ey=this.y-Math.sin(this.angle)*this.len;
-      const g=ctx.createLinearGradient(ex,ey,this.x,this.y);
-      g.addColorStop(0,'rgba(201,168,76,0)');
-      g.addColorStop(1,`rgba(218,182,88,${a})`);
-      ctx.beginPath();
-      ctx.moveTo(ex,ey);
-      ctx.lineTo(this.x,this.y);
-      ctx.strokeStyle=g;
-      ctx.lineWidth=.8;
-      ctx.stroke();
-    };
-  }
-
   resize();
-  for(let i=0;i<230;i++)parts.push(new Particle(false));
-  for(let i=0;i<6;i++)streaks.push(new Streak());
-
-  function animate(){
-    ctx.clearRect(0,0,W,H);
-    streaks.forEach(s=>{s.update();s.draw();});
-    parts.forEach(p=>{p.update();p.draw();});
-    requestAnimationFrame(animate);
-  }
-  animate();
+  for(let j=0;j<190;j++)pts.push(new P(true));
   window.addEventListener('resize',resize);
-})();
+  (function loop(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.tick();p.draw()});requestAnimationFrame(loop)})();
+
+  /* ── HERO ENTRANCE ── */
+  const tl=gsap.timeline({delay:.05});
+  tl.to('#h-ey',{opacity:1,y:0,duration:.7,ease:'power3.out'})
+    .from('#h-title .word',{y:90,opacity:0,stagger:.13,duration:.95,ease:'power4.out'},'-=.35')
+    .to('#h-sub',{opacity:1,y:0,duration:.7,ease:'power3.out'},'-=.45')
+    .to('#h-btns',{opacity:1,duration:.6,ease:'power2.out'},'-=.4')
+    .to('#scroll-hint',{opacity:1,duration:.6},'-=.2');
+
+  /* Hero logo shrinks on scroll */
+  gsap.to('#hero-logo',{scale:.55,opacity:0,ease:'none',
+    scrollTrigger:{trigger:'#hero',start:'top top',end:'60% top',scrub:true}});
+
+  /* Hero canvas parallax */
+  gsap.to('#hero-canvas',{yPercent:30,ease:'none',
+    scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:true}});
+
+  /* ── PORTFOLIO CARDS ── */
+  gsap.utils.toArray('.p-card').forEach((c,i)=>{
+    gsap.from(c,{y:80,opacity:0,scale:.94,duration:1,ease:'power3.out',delay:i*.12,
+      scrollTrigger:{trigger:c,start:'top 88%',toggleActions:'play none none none'}});
+  });
+
+  /* ── SERVICES ── */
+  gsap.utils.toArray('.sv-card').forEach((c,i)=>{
+    gsap.from(c,{x:i%2===0?-45:45,opacity:0,duration:.85,ease:'power3.out',delay:i*.07,
+      scrollTrigger:{trigger:c,start:'top 90%',toggleActions:'play none none none'}});
+  });
+
+  /* ── SECTION TITLES ── */
+  gsap.utils.toArray('.s-title').forEach(el=>{
+    gsap.from(el,{y:45,opacity:0,duration:.9,ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 89%',toggleActions:'play none none none'}});
+  });
+
+  /* ── STATS counters ── */
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=+el.dataset.target,suffix=el.dataset.suffix||'';
+    ScrollTrigger.create({trigger:el,start:'top 85%',once:true,onEnter:()=>{
+      const obj={v:0};
+      gsap.to(obj,{v:target,duration:1.8,ease:'power2.out',
+        onUpdate:()=>{el.textContent=Math.round(obj.v)+suffix}});
+    }});
+  });
+
+  /* ── TESTIMONIALS — scrub translate using px calculation ── */
+  const track=document.getElementById('t-track');
+  ScrollTrigger.create({
+    trigger:'#testimonials',start:'top bottom',end:'bottom top',scrub:1.5,
+    onUpdate:self=>{
+      const maxX=track.scrollWidth-track.parentElement.offsetWidth;
+      const x=self.progress*Math.max(0,maxX)*-1;
+      gsap.set(track,{x});
+    }
+  });
+
+  /* ── PRICING ── */
+  gsap.utils.toArray('.pr-card').forEach((c,i)=>{
+    gsap.from(c,{y:65,opacity:0,scale:.96,duration:1,ease:'power3.out',delay:i*.15,
+      scrollTrigger:{trigger:c,start:'top 88%',toggleActions:'play none none none'}});
+  });
+
+  /* ── CTA ── */
+  gsap.from('#cta .s-title',{y:40,opacity:0,duration:1,ease:'power3.out',
+    scrollTrigger:{trigger:'#cta',start:'top 86%',toggleActions:'play none none none'}});
+  gsap.from('.wa-btn',{scale:.9,opacity:0,duration:.8,ease:'back.out(1.5)',
+    scrollTrigger:{trigger:'.wa-btn',start:'top 90%',toggleActions:'play none none none'}});
+}
 </script>
 </body>
 </html>
