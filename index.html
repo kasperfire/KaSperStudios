@@ -87,7 +87,8 @@ section{padding:8rem 2rem;position:relative}
 .p-card:hover{border-color:rgba(201,168,76,.55);transform:translateY(-8px) scale(1.02);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(201,168,76,.1),0 0 0 1px rgba(201,168,76,.12)}
 .p-thumb-wrap{position:relative;overflow:hidden;width:100%;aspect-ratio:4/3}
 .p-thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
-.p-card:hover .p-thumb{transform:scale(1.06)}
+.p-card:hover .p-thumb{transform:scale(1.06);filter:brightness(1.12)}
+.p-card:hover .p-thumb-wrap::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 2px rgba(201,168,76,.35);border-radius:inherit;pointer-events:none;transition:opacity .35s}
 .p-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent 55%);display:flex;align-items:flex-end;padding:1.5rem;opacity:0;transition:.35s}
 .p-card:hover .p-overlay{opacity:1}
 .visit{background:var(--gold);color:var(--black);padding:.55rem 1.4rem;border-radius:2rem;font-weight:700;font-size:.84rem;text-decoration:none;font-family:inherit;cursor:none;white-space:nowrap}
@@ -248,7 +249,7 @@ body.eng .ar-i{display:none}body.eng .en-i{display:inline}
     <div class="p-grid">
       <div class="p-card">
         <div class="p-thumb-wrap">
-          <img class="p-thumb" src="https://image.thum.io/get/width/800/crop/460/noanimate/https://modern-luna-nest.lovable.app/" alt="Luna Café" loading="lazy">
+          <img class="p-thumb" src="cafe.jpeg" alt="Luna Café" loading="lazy">
           <div class="p-overlay"><a href="https://modern-luna-nest.lovable.app/" target="_blank" class="visit"><span class="ar-i">زيارة الموقع</span><span class="en-i">Visit Site</span> ↗</a></div>
         </div>
         <div class="p-info">
@@ -259,7 +260,7 @@ body.eng .ar-i{display:none}body.eng .en-i{display:inline}
       </div>
       <div class="p-card">
         <div class="p-thumb-wrap">
-          <img class="p-thumb" src="https://image.thum.io/get/width/800/crop/460/noanimate/https://cosmic-dine-arabic.lovable.app/" alt="Nebula Dining" loading="lazy">
+          <img class="p-thumb" src="sadeem.jpeg" alt="Nebula Dining" loading="lazy">
           <div class="p-overlay"><a href="https://cosmic-dine-arabic.lovable.app/" target="_blank" class="visit"><span class="ar-i">زيارة الموقع</span><span class="en-i">Visit Site</span> ↗</a></div>
         </div>
         <div class="p-info">
@@ -270,7 +271,7 @@ body.eng .ar-i{display:none}body.eng .en-i{display:inline}
       </div>
       <div class="p-card">
         <div class="p-thumb-wrap">
-          <img class="p-thumb" src="https://image.thum.io/get/width/800/crop/460/noanimate/https://graffiti-future-burger.lovable.app/" alt="GRAFFITI" loading="lazy">
+          <img class="p-thumb" src="BURGER.jpg.jpeg" alt="GRAFFITI" loading="lazy">
           <div class="p-overlay"><a href="https://graffiti-future-burger.lovable.app/" target="_blank" class="visit"><span class="ar-i">زيارة الموقع</span><span class="en-i">Visit Site</span> ↗</a></div>
         </div>
         <div class="p-info">
