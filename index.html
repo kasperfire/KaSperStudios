@@ -85,8 +85,8 @@ section{padding:8rem 2rem;position:relative}
 .p-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem}
 .p-card{background:var(--card);border:1px solid var(--border);border-radius:1.2rem;overflow:hidden;transition:border-color .35s,transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s;will-change:transform,opacity}
 .p-card:hover{border-color:rgba(201,168,76,.55);transform:translateY(-8px) scale(1.02);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(201,168,76,.1),0 0 0 1px rgba(201,168,76,.12)}
-.p-thumb-wrap{position:relative;overflow:hidden;width:100%;aspect-ratio:4/3}
-.p-thumb{position:absolute;inset:0;width:100% !important;height:100% !important;object-fit:cover !important;object-position:center;display:block;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.p-thumb-wrap{position:relative;overflow:hidden;width:100%;height:260px}
+.p-thumb{position:absolute;top:0;left:0;right:0;bottom:0;width:100% !important;height:100% !important;object-fit:cover !important;object-position:center top;display:block;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
 .p-card:hover .p-thumb{transform:scale(1.06);filter:brightness(1.12)}
 .p-card:hover .p-thumb-wrap::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 2px rgba(201,168,76,.35);border-radius:inherit;pointer-events:none;transition:opacity .35s}
 .p-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent 55%);display:flex;align-items:flex-end;padding:1.5rem;opacity:0;transition:.35s}
@@ -174,8 +174,8 @@ body.eng .ar-i{display:none}body.eng .en-i{display:inline}
   .p-grid,.sv-grid{grid-template-columns:1fr}
   .h-btns{flex-direction:column;align-items:center}
   .t-card{width:280px}
-  .p-thumb-wrap{width:100%;aspect-ratio:4/3}
-  .p-thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+  .p-thumb-wrap{width:100%;height:220px}
+  .p-thumb{position:absolute;top:0;left:0;right:0;bottom:0;width:100% !important;height:100% !important;object-fit:cover !important;object-position:center top}
   .p-card:hover{transform:none;box-shadow:none}
 }
 </style>
